@@ -1,5 +1,5 @@
 from django.conf import settings
-from referee.models import Game, GamePointSet, GamePoint, Touchdown
+from referee.models import Game, GamePoint, Touchdown
 from django.contrib.gis.geos import Point, MultiPoint
 from datetime import datetime
 

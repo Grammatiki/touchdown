@@ -24,7 +24,6 @@ class GameAdmin(admin.GeoModelAdmin):
 class PointAdmin(admin.GeoModelAdmin):
     actions = [score_touchdowns]
 
-admin.site.register(GamePointSet, admin.GeoModelAdmin)
 admin.site.register(GamePoint, PointAdmin)
 admin.site.register(Game, GameAdmin)
 admin.site.register(Touchdown, admin.GeoModelAdmin)
