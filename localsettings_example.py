@@ -1,5 +1,9 @@
 # Django settings for touchdown project.
 
+#URL_ROOT this is only necessary if you are using the django development server.
+#If you have apache and mod_python, use the django.root python option in httpd.conf.
+URL_ROOT='http://localhost:8000'
+
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
@@ -15,6 +19,10 @@ DATABASE_USER = ''             # Not used with sqlite3.
 DATABASE_PASSWORD = ''         # Not used with sqlite3.
 DATABASE_HOST = ''             # Set to empty string for localhost. Not used with sqlite3.
 DATABASE_PORT = ''             # Set to empty string for default. Not used with sqlite3.
+
+#URL_ROOT this is only necessary if you are using the django development server.
+#If you have apache and mod_python, use the django.root python option in httpd.conf.
+URL_ROOT='http://localhost:8000'
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -35,12 +43,12 @@ USE_I18N = False
 
 # Absolute path to the directory that holds media.
 # Example: "/home/media/media.lawrence.com/"
-MEDIA_ROOT = ''
+MEDIA_ROOT = 'C:/touchdown/media/'
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash if there is a path component (optional in other cases).
 # Examples: "http://media.lawrence.com", "http://example.com/media/"
-MEDIA_URL = ''
+MEDIA_URL = 'http://localhost:8000/site_media/'
 
 # URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
 # trailing slash.

@@ -1,0 +1,34 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Touchdown form</title>
+</head>
+
+<body>
+
+<h1>Claim a Touchdown</h1>
+<form enctype="multipart/form-data" action="" method="post">
+
+Which point did you get to?
+{{form.point}}
+
+<p>
+Please describe how you got to this point. <br />
+This information will be kept secret until the end of the game. <br />
+{{form.description}}
+</p>
+
+<p>
+Please submit a photo that proves you were there.<br />
+If you photoshop it, you are lame and need to get a life. <br />
+{{form.proof_photo}}
+</p>
+
+
+
+<input type="submit" value="Claim Touchdown"/>
+</form>
+
+</body>
+</html>
