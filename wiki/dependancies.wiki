@@ -1,7 +1,7 @@
 #labels Phase-Requirements
 #Things that need to be installed for touchdown to work.
 
-= Touchdown dependancies =
+= Touchdown dependencies =
 
 Users playing the game need no software except a browser.
 
