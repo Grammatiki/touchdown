@@ -1,0 +1,118 @@
+<html xmlns="http://www.w3.org/1999/xhtml"> 
+  <head> 
+    <title>Touchdown game: {{game}}</title> 
+
+        <script src="http://www.openlayers.org/api/OpenLayers.js"></script>
+    <script type="text/javascript"> 
+        // making this a global variable so that it is accessible for
+        // debugging/inspecting in Firebug
+        var map = null;
+ 
+        function init(){
+ 
+            map = new OpenLayers.Map('map');
+ 
+            var ol_wms = new OpenLayers.Layer.WMS(
+                "OpenLayers WMS",
+                "http://labs.metacarta.com/wms/vmap0",
+                {layers: 'basic'}
+            );
+ 
+            var jpl_wms = new OpenLayers.Layer.WMS(
+                "NASA Global Mosaic",
+                "http://t1.hypercube.telascience.org/cgi-bin/landsat7", 
+                {layers: "landsat7"}
+            );
+
+
+                /*
+                 * Layer style
+                 */
+                // we want opaque external graphics and non-opaque internal graphics
+                var layer_style = OpenLayers.Util.extend({}, OpenLayers.Feature.Vector.style['default']);
+                layer_style.fillOpacity = 0.2;
+                layer_style.graphicOpacity = 1;
+			
+
+                /*
+                 * Blue style
+                 */
+                var style_blue = OpenLayers.Util.extend({}, layer_style);
+                style_blue.strokeColor = "blue";
+                style_blue.fillColor = "blue";
+                style_blue.graphicName = "star";
+                style_blue.pointRadius = 10;
+                style_blue.strokeWidth = 3;
+                style_blue.rotation = 45;
+                style_blue.strokeLinecap = "butt";
+
+
+			var iconSize =  new OpenLayers.Size(20,20);
+			var iconOffset = new OpenLayers.Pixel(-(iconSize.w/2), -iconSize.h);
+			var game_points = new OpenLayers.Layer.Vector("Simple Geometry", {style: layer_style});
+
+			{% for point in game.gamepoint_set.all %}
+                var point{{point.id}} = new OpenLayers.Geometry.Point({{point.point.x}}, {{point.point.y}});
+                var point{{point.id}}Feature = new OpenLayers.Feature.Vector(point{{point.id}},null,style_blue);
+			{% endfor %}
+
+			var playing_field = new OpenLayers.Bounds({{game.northwest_corner.x}},{{game.northwest_corner.y}},{{game.southeast_corner.x}},{{game.southeast_corner.y}}).toGeometry();
+			var playing_field_feature = new OpenLayers.Feature.Vector(playing_field);
+
+			game_points.addFeatures([{%for point in game.gamepoint_set.all%}point{{point.id}}Feature, {%endfor%}]);
+
+			game_points.setVisibility(true);
+            map.addLayers([ol_wms, jpl_wms, game_points]);
+            map.addControl(new OpenLayers.Control.LayerSwitcher());
+			map.zoomToExtent(game_points.getDataExtent()); 
+        }
+    </script> 
+  <style type="text/css">
+<!--u
+.game_map {
+}
+#title {
+	display: inline;
+}
+.game_details {
+
+}
+.game_actions {
+
+}
+-->
+  </style>
+  </head> 
+  <body onLoad="init()"> 
+    <h1 id="title">Touchdown game {{game.id}}: {{game}}</h1> 
+    <p> 
+    <div class="game_details">
+        Game details:
+        <ul>
+        <li>Contains {{game.gamepoint_set.count}} points. [<a href={{game.download_gpx}}>Download for GPS</a>]{%if user.is_staff%}<a href=<url reset_points game>>Redraw game points</a>{%endif%}</li>        
+        <li>
+        In play from {{game.start_date}} to {{game.start_date}}.
+        {%if game.time_left%}{{game.time_left}} remaining.{%else%} Now ended. {%endif%}
+		{%if game.time_until%}{{game.time_until}} until game begins.{%endif%}        
+        </li>
+        <li>{{game.player.count}} players {%if user.is_authenticated%}, counting you, {{user}}{%endif%}</li>
+        <li></li>
+        </ul>
+    </div>
+
+	<div class="game_actions">	                
+        Actions:
+        <ul>
+        <li><a href="">Join this game</a></li>
+        <li><a href="">Claim a touchdown</a></li>
+        {%ifequal user.is_authenticated 0%}<li><a href="">Login to view your score</a></li>{%endifequal%}    
+        </ul>
+
+		{% if user.is_authenticated %}
+		Your score: <work out score>
+		{% endif %}        
+	</div>                
+    </p> 
+    <div id="map" class="gamemap"></div> 
+  </body> 
+</html>
