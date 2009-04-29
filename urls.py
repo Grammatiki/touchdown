@@ -4,7 +4,7 @@ from referee import models, forms
 import settings
 # Uncomment the next two lines to enable the admin:
 
-admin.autodiscover()
+#admin.autodiscover()
 
 urlpatterns = patterns('',
     # Example:
