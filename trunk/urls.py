@@ -19,7 +19,7 @@ urlpatterns = patterns('',
     
     (r'^$','django.views.generic.simple.direct_to_template',{'template':'referee/index.html'}),
 
-    (r'^game/(?P<game_name>[^/]*)/?$','referee.views.game'),
+    url(r'^game/(?P<game_name>[^/]*)/?$','referee.views.game', name='game'),
 
     url(r'^new_game/?$',
         'django.views.generic.create_update.create_object',
