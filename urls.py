@@ -17,17 +17,17 @@ urlpatterns = patterns('',
     # Uncomment the next line to enable the admin:
     (r'^admin/(.*)', admin.site.root) ,
     
-    (r'^$','django.views.generic.simple.direct_to_template',{'template':'referee/index.html'}),
+    url(r'^$','referee.views.index',name='index'),
 
     url(r'^game/(?P<game_name>[^/]*)/?$','referee.views.game', name='game'),
 
     url(r'^new_game/?$',
         'django.views.generic.create_update.create_object',
-        {'form_class':forms.GameForm}, 'new_game'),
+        {'form_class':forms.GameForm}, name='new_game'),
         
     url(r'^touchdown/(?P<object_id>\d+)/?$',
         'django.views.generic.list_detail.object_detail',
-        {'queryset':models.Touchdown.objects.all()}),
+        {'queryset':models.Touchdown.objects.all()}, name='touchdown'),
 
     (r'^claim_touchdown/?$',
         'django.views.generic.create_update.create_object',

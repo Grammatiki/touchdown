@@ -3,18 +3,76 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Untitled Document</title>
+<style type="text/css">
+<!--
+table, tr, td {
+	border: 1px solid #000;
+}
+-->
+</style>
 </head>
 
 <body>
 <h1>Touchdown</h1>
 
-Ever think about getting off of your ass and doing something in the real world?
+<p>Ever think about getting off of your ass and doing something in the real world?</p>
 
-Something crazy?
+<p>Something crazy?</p>
 
-Well here it is.
+<p>Well here it is.</p>
 
 <a href="{%url new_game%}">Start a new game</a>
+
+
+<p>Current time: {{datetime.now}}</p>
+
+<p>
+<h2>Games in play</h2>
+    <table>
+    <tr><th>Game name</th><th># Players</th><th>Start</th><th>End</th></tr>
+        {% for game in games_in_play %}
+            <tr>
+                <td><a href="{{game.get_absolute_url}}">{{game.name}}</a></td>
+                <td>{{game.player.count}}</td>
+                <td>{{game.start_date}}</td>
+                <td>{{game.end_date}}></td>
+            </tr>
+        {% endfor %}
+    </table>
+</p>
+
+
+<p>
+<h2>Planned games</h2>
+    <table>
+    <tr><th>Game name</th><th># Players</th><th>Start</th><th>End</th></tr>
+        {% for game in planned_games %}
+            <tr>
+                <td><a href="{{game.get_absolute_url}}">{{game.name}}</a></td>
+                <td>{{game.player.count}}</td>
+                <td>{{game.start_date}}</td>
+                <td>{{game.end_date}}></td>
+            </tr>
+        {% endfor %}
+    </table>
+Todo: signup links    
+</p>
+
+<p>
+<h2>Finished games</h2>
+    <table>
+    <tr><th>Game name</th><th># Players</th><th>Start</th><th>End</th></tr>
+        {% for game in planned_games %}
+            <tr>
+                <td><a href="{{game.get_absolute_url}}">{{game.name}}</a></td>
+                <td>{{game.player.count}}</td>
+                <td>{{game.start_date}}</td>
+                <td>{{game.end_date}}></td>
+            </tr>
+        {% endfor %}
+    Todo: winners, scores here
+    </table>
+</p>
 
 </body>
 </html>
