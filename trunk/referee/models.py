@@ -40,15 +40,15 @@ class Game(models.Model):
     motorized_vehicles_allowed = models.BooleanField(default=True)
     
     def time_left(self):
-        res=self.end_date-datetime.now()
-        if res>0:
+        res=datetime.now()-self.end_date
+        if res>0: #this doesn't work, fix it.
             return unicode(res)
         else:
             return False
 
     def time_until(self):
         res=self.start_date-datetime.now()
-        if res>0:
+        if res>0: #this doesn't work, fix it.
             return unicode(res)
         else:
             return False

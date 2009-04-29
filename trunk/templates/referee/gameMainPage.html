@@ -91,7 +91,7 @@
         <ul>
         <li>Contains {{game.gamepoint_set.count}} points. [<a href={{game.download_gpx}}>Download for GPS</a>]{%if user.is_staff%}<a href=<url reset_points game>>Redraw game points</a>{%endif%}</li>        
         <li>
-        In play from {{game.start_date}} to {{game.start_date}}.
+        In play from {{game.start_date}} to {{game.end_date}}.
         {%if game.time_left%}{{game.time_left}} remaining.{%else%} Now ended. {%endif%}
 		{%if game.time_until%}{{game.time_until}} until game begins.{%endif%}        
         </li>
