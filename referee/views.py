@@ -6,5 +6,5 @@ def game(request, game_name):
     game=Game.objects.get(name=game_name)
     user=request.user
     
-    return render_to_response('gameMainPage.html', {'game':game,'user':user
+    return render_to_response('referee/gameMainPage.html', {'game':game,'user':user
     })
