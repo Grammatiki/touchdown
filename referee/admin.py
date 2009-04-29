@@ -1,7 +1,6 @@
 from django.conf import settings
 from django.contrib.gis import admin
 from models import *
-from referee.pointgen import make_point_set
 from referee.scoring import score_touchdown
 
 def make_point_sets(modeladmin, request, queryset):
