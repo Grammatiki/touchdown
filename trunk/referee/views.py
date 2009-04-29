@@ -14,6 +14,6 @@ def index(request):
     time=datetime.now()
     games_in_play=Game.objects.filter(start_date__lte=datetime.now(), end_date__gte=time)
     planned_games=Game.objects.filter(start_date__gte=time)
-    finished_games=Game.objects.filter(end_date__lte=time)
+    finished_games=Game.objects.filter(end_date__gte=time)
     
     return render_to_response('referee/index.html', locals())
