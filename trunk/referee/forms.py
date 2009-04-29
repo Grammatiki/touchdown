@@ -7,10 +7,12 @@ from django import forms
 # Getting an instance so we can generate the map widget; also
 # getting the geometry field for the model.
 admin_instance = GameAdmin(Game, admin.site)
-point_field = Game._meta.get_field('northwest_corner')
+nw_field = Game._meta.get_field('northwest_corner')
+se_field = Game._meta.get_field('southeast_corner')
 
 # Generating the widget.
-PointWidget = admin_instance.get_map_widget(point_field)
+nwWidget = admin_instance.get_map_widget(nw_field)
+seWidget = admin_instance.get_map_widget(se_field)
 
 class GameForm(forms.ModelForm):
     """
@@ -22,8 +24,8 @@ class GameForm(forms.ModelForm):
     http://yml-blog.blogspot.com/2009/01/how-to-use-same-widget-than-geodjango.html
     """
     
-    northwest_corner = forms.CharField(widget=PointWidget())
-    southeast_corner = forms.CharField(widget=PointWidget())
+    northwest_corner = forms.CharField(widget=nwWidget())
+    southeast_corner = forms.CharField(widget=seWidget())
     class Meta:
         model = Game
         exclude = ("content_type","object_id","player")
