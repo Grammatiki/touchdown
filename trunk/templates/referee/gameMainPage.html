@@ -2,7 +2,7 @@
   <head> 
     <title>Touchdown game: {{game}}</title> 
 
-        <script src="http://www.openlayers.org/api/OpenLayers.js"></script>
+        <script src="http://openlayers.org/dev/OpenLayers.js"></script>
     <script type="text/javascript"> 
         // making this a global variable so that it is accessible for
         // debugging/inspecting in Firebug
@@ -24,38 +24,41 @@
                 {layers: "landsat7"}
             );
 
+            // allow testing of specific renderers via "?renderer=Canvas", etc
+            var renderer = OpenLayers.Util.getParameters(window.location.href).renderer;
+            renderer = (renderer) ? [renderer] : OpenLayers.Layer.Vector.prototype.renderers;
 
-                /*
-                 * Layer style
-                 */
-                // we want opaque external graphics and non-opaque internal graphics
-                var layer_style = OpenLayers.Util.extend({}, OpenLayers.Feature.Vector.style['default']);
-                layer_style.fillOpacity = 0.2;
-                layer_style.graphicOpacity = 1;
-			
-
-                /*
-                 * Blue style
-                 */
-                var style_blue = OpenLayers.Util.extend({}, layer_style);
-                style_blue.strokeColor = "blue";
-                style_blue.fillColor = "blue";
-                style_blue.graphicName = "star";
-                style_blue.pointRadius = 10;
-                style_blue.strokeWidth = 3;
-                style_blue.rotation = 45;
-                style_blue.strokeLinecap = "butt";
-
-
-			var iconSize =  new OpenLayers.Size(20,20);
-			var iconOffset = new OpenLayers.Pixel(-(iconSize.w/2), -iconSize.h);
-			var game_points = new OpenLayers.Layer.Vector("Simple Geometry", {style: layer_style});
+            var game_points = new OpenLayers.Layer.Vector("Simple Geometry", {
+                styleMap: new OpenLayers.StyleMap({'default':{
+                    strokeColor: "#00FF00",
+                    strokeOpacity: 1,
+                    strokeWidth: 3,
+/*                    fillColor: "#FF5500",
+                    fillOpacity: 0.5,
+*/                  pointRadius: 1,
+                    pointerEvents: "visiblePainted",
+                    label : "${value}",
+                    
+                    fontColor: "${favColor}",
+                    fontSize: "12px",
+                    fontFamily: "Courier New, monospace",
+                    fontWeight: "bold",
+                    labelAlign: "${align}"
+                }}),
+                renderers: renderer
+            });
 
 			{% for point in game.gamepoint_set.all %}
                 var point{{point.id}} = new OpenLayers.Geometry.Point({{point.point.x}}, {{point.point.y}});
-                var point{{point.id}}Feature = new OpenLayers.Feature.Vector(point{{point.id}},null,style_blue);
+                var point{{point.id}}Feature = new OpenLayers.Feature.Vector(point{{point.id}});
+				point{{point.id}}Feature.attributes = {
+                value: "{{point.value}}",
+				name: "{{point.name}}",				
+                favColor: "black",
+                align: "rt"
+            };
 			{% endfor %}
-
+			
 			var playing_field = new OpenLayers.Bounds({{game.northwest_corner.x}},{{game.northwest_corner.y}},{{game.southeast_corner.x}},{{game.southeast_corner.y}}).toGeometry();
 			var playing_field_feature = new OpenLayers.Feature.Vector(playing_field);
 
@@ -63,13 +66,39 @@
 
 			game_points.setVisibility(true);
             map.addLayers([ol_wms, jpl_wms, game_points]);
+            selectControl = new OpenLayers.Control.SelectFeature(
+                [game_points],
+                {
+                    clickout: true, toggle: false,
+                    multiple: false, hover: false,
+                    toggleKey: "ctrlKey", // ctrl key removes from selection
+                    multipleKey: "shiftKey" // shift key adds to selection
+                }
+            );
+            map.addControl(selectControl);
+            selectControl.activate();
             map.addControl(new OpenLayers.Control.LayerSwitcher());
-			map.zoomToExtent(game_points.getDataExtent()); 
+			map.zoomToExtent(game_points.getDataExtent());
+            game_points.events.on({
+                "featureselected": function(e) {
+                    showStatus("<a href={%url claim_touchdown%}>Claim a touchdown on point" + e.feature.attributes.name + "</a>" );
+                },
+                "featureunselected": function(e) {
+                    showStatus("unselected feature "+e.feature.id+" on Vector Layer 1");
+                }
+            });
+
         }
+
+        function showStatus(text) {
+            document.getElementById("status").innerHTML = text;            
+        }
+
     </script> 
   <style type="text/css">
 <!--u
-.game_map {
+#map {
+	width: 20%;
 }
 #title {
 	display: inline;
@@ -114,5 +143,6 @@
 	</div>                
     </p> 
     <div id="map" class="gamemap"></div> 
+    <div id="status"></div>
   </body> 
 </html>
