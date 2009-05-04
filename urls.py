@@ -29,9 +29,9 @@ urlpatterns = patterns('',
         'django.views.generic.list_detail.object_detail',
         {'queryset':models.Touchdown.objects.all()}, name='touchdown'),
 
-    (r'^claim_touchdown/?$',
+    url(r'^claim_touchdown/?$',
         'django.views.generic.create_update.create_object',
-        {'model':models.Touchdown, 'login_required':True}),
+        {'model':models.Touchdown, 'login_required':True}, name='claim_touchdown'),
 
     (r'^openid/', include('django_openid_auth.urls')),
 

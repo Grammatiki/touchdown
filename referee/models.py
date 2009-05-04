@@ -7,11 +7,6 @@ from django.contrib.gis.geos import Point, MultiPoint
 import random
 #import pointgen
 
-class Article(models.Model):
-    title = models.CharField(max_length=255)
-    summary = models.TextField()
-    body = models.TextField()
-
 class Person(models.Model):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
@@ -27,6 +22,21 @@ class GamePoint(models.Model):
     
     def __unicode__(self):
         return self.game.name + ' ' + str(self.pk)
+
+    def value(self):
+        touchdownCount=self.touchdown_set.count()
+        if not settings.REQUIRE_TOUCHDOWN_APPROVAL:
+            if touchdownCount == 0:
+                return 10
+            else:
+                return 10/self.touchdown_set.count()
+        else:
+            if touchdownCount > 0:
+                return 10/self.touchdown_set.filter(approved=True).count()
+            else:
+                return 10
+            
+        
 
 class Game(models.Model):
     name=models.CharField(max_length=50, unique=True)
